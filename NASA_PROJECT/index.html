@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthetic Aperture Radar</title>
+  <style>
+    :root {
+      --primary: #00e0ff;
+      --bg-dark: #0f1012;
+      --card-bg: #1a1b1d;
+      --text-light: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --font: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* Reset & basics */
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {
+      font-family: var(--font);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    main {max-width: 1200px; margin:0 auto; padding: 20px;}
+    a {text-decoration:none; color: inherit;}
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      background: linear-gradient(90deg, #0b0c1a, #141528);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    nav .logo {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #ff4500;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+    nav ul li a {
+      color: #f5f5f5;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover {color: var(--primary);}
+
+    /* Hero Section */
+    .hero-section {
+      position:relative;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      overflow:hidden;
+      padding-top: 80px; /* navbar offset */
+    }
+    .background-video {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      z-index:-2;
+    }
+    .video-overlay {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.35);
+      z-index:-1;
+    }
+    .hero-content {
+      z-index:1;
+      padding:40px 30px;
+      border-radius:12px;
+    }
+    .hero-content h1 {
+      font-size:3rem;
+      color:var(--primary);
+      text-shadow:0 0 20px rgba(0,224,255,0.8);
+      animation: fadeInDown 2s ease;
+    }
+    .hero-content p {
+      font-size:1.2rem;
+      color:var(--text-muted);
+      margin-top:15px;
+      animation: fadeInUp 2s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {opacity:0; transform:translateY(-40px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeInUp {
+      from {opacity:0; transform:translateY(40px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+
+    /* Sections */
+    section {margin:80px 0;}
+    h2 {font-size:2.2rem; margin-bottom:20px; color:var(--primary);}
+    h3 {color:var(--primary); margin-bottom:10px;}
+    p {margin-bottom:12px;}
+
+    /* Flex layout */
+    .flex-section {
+      display:flex; flex-wrap:wrap;
+      gap:30px; align-items:center;
+    }
+    .flex-section .text-content {flex:1; min-width:260px;}
+    .flex-section figure {flex:1; text-align:center;}
+
+    /* Images */
+    .same-size-img,
+    .detect-img {
+      max-width: 600px;
+      width: 100%;
+      height: auto;
+      border-radius: 0;
+      border: 2px solid rgba(0,224,255,0.4);
+      box-shadow: 0 0 10px rgba(0,224,255,0.4);
+      transition: transform .4s, box-shadow .4s;
+    }
+    .same-size-img:hover,
+    .detect-img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,224,255,0.9);
+    }
+    .detect-img {border-radius:10px;}
+
+    /* Cards & Grid */
+    .grid {display:grid; gap:20px; margin:20px 0;}
+    .grid-3 {grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+    .grid-4 {grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+    .card {
+      background:var(--card-bg);
+      padding:20px;
+      border-radius:12px;
+      border:1px solid rgba(0,224,255,0.25);
+      transition:transform .3s, box-shadow .3s;
+    }
+    .card:hover {
+      transform:translateY(-6px);
+      box-shadow:0 0 18px rgba(0,224,255,0.6);
+    }
+
+    /* Footer */
+    footer {text-align:center; padding:40px 0; color:var(--text-muted);}
+
+    /* Scroll animations */
+    .reveal {opacity:0; transform:translateY(40px); transition:all 1s ease;}
+    .reveal.active {opacity:1; transform:translateY(0);}
+
+    /* Chatbot button */
+    .chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #00e0ff;
+      color: #0f1012;
+      font-size: 1.5rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,224,255,0.5);
+      z-index: 1001;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+    }
+
+    .chatbot-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 18px rgba(0,224,255,0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="logo">
+      <img src="https://ychef.files.bbci.co.uk/1280x720/p0j03djw.jpg" alt="SAR Explorer Logo" style="height:40px; vertical-align:middle;">
+      <span style="margin-left:8px; font-weight:bold; color:#ff4500;">TerraSentinel</span>
+    </a>
+
+    <ul>
+      <li><a href="C:\NASA_PROJECT\sentinel-watch-bot-main\earth-risk-monitor.html">HydroAlert 💧</a></li>
+      
+      
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <video autoplay muted loop class="background-video">
+      <source src="C:\NASA_PROJECT\218740.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <div class="hero-content">
+      <h1>SAR: Revealing Earth’s Secrets</h1>
+      <p>Through radar’s eye, safeguarding our planet with real-time flood and landslide detection powered by AI.</p>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <!-- What is SAR -->
+    <section class="flex-section reveal">
+      <div class="text-content">
+        <h2>💡 What is SAR?</h2>
+        <p>Synthetic Aperture Radar (SAR) is an advanced remote sensing technology that uses radar signals to create high-resolution images of the Earth's surface.</p>
+        <p>SAR can "see" through clouds, fog, and darkness, providing continuous monitoring capabilities day and night.</p>
+      </div>
+      <figure>
+        <img src="C:\NASA_PROJECT\images\sar-satellite.jpg" alt="SAR Satellite" class="same-size-img">
+        <figcaption>SAR Satellite in orbit</figcaption>
+      </figure>
+    </section>
+
+    <!-- How SAR Works -->
+    <section class="flex-section reveal">
+      <figure>
+        <img src="C:\NASA_PROJECT\images\radar-waves.jpg" alt="SAR Radar Waves" class="same-size-img">
+        <figcaption>Synthetic Aperture Radar waves interacting with Earth</figcaption>
+      </figure>
+      <div class="text-content">
+        <h2>📡 How Does SAR Work?</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>1. Signal Transmission</h3>
+            <p>The satellite transmits pulses of microwave energy toward the Earth's surface.</p>
+          </div>
+          <div class="card">
+            <h3>2. Echo Reception</h3>
+            <p>Different surfaces reflect signals differently - water, vegetation, and soil all have unique radar signatures.</p>
+          </div>
+          <div class="card">
+            <h3>3. Image Processing</h3>
+            <p>Advanced algorithms process the returned signals to create detailed images.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detection -->
+    <section class="reveal">
+      <h2>⚠️ What Can SAR Detect?</h2>
+      <p class="subtitle">SAR technology has become invaluable for monitoring our planet and detecting critical changes</p>
+      <div class="grid grid-4">
+        <div class="card"><h3>🌊 Flood Monitoring</h3><p>Water appears very dark in SAR images, making it easy to map flooded areas.</p></div>
+        <div class="card"><h3>⛰️ Landslide Detection</h3><p>SAR can detect ground deformation as small as a few millimeters.</p></div>
+        <div class="card"><h3>🌲 Deforestation Tracking</h3><p>Changes in forest cover are easily visible, helping track environmental changes.</p></div>
+        <div class="card"><h3>🏗️ Infrastructure Changes</h3><p>Urban development is clearly visible for planning and monitoring.</p></div>
+      </div>
+      <figure style="text-align:center; margin-bottom:30px;">
+        <img src="C:\NASA_PROJECT\images\flood-detection.jpg" alt="Flood Detection" class="detect-img">
+        <figcaption>Before and after flood event as detected by SAR</figcaption>
+      </figure>
+    </section>
+
+    <!-- Why SAR is Different -->
+    <section class="flex-section reveal">
+      <div class="text-content">
+        <h2>👁️ Why is SAR Different?</h2>
+        <p>SAR works 24/7, regardless of weather or sunlight.</p>
+        <p>Radar waves can penetrate vegetation canopy and even dry soil.</p>
+        <p>Advanced SAR techniques can measure ground movement with millimeter accuracy.</p>
+      </div>
+      <figure>
+        <img src="C:\NASA_PROJECT\images\sar-vs-optical.jpg" alt="Optical vs SAR" class="same-size-img">
+        <figcaption>Optical (left) vs SAR (right)</figcaption>
+      </figure>
+    </section>
+  </main>
+
+  <!-- Chatbot Floating Button -->
+  <a href="http://192.168.56.1:8081/" class="chatbot-btn" title="Chat with us!">💬</a>
+
+  <!-- Scroll animation JS -->
+  <script>
+    const reveals = document.querySelectorAll(".reveal");
+    window.addEventListener("scroll", () => {
+      for (let i = 0; i < reveals.length; i++) {
+        let windowHeight = window.innerHeight;
+        let elementTop = reveals[i].getBoundingClientRect().top;
+        let elementVisible = 100;
+        if (elementTop < windowHeight - elementVisible) {
+          reveals[i].classList.add("active");
+        }
+      }
+    });
+  </script>
+</body>
+</html>
