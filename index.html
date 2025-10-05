@@ -9,6 +9,7 @@
   
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,14 +88,7 @@
       color: inherit;
     }
     
-    .brand-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: hsl(var(--primary));
-      box-shadow: var(--glow-primary);
-      animation: pulse-slow 3s ease-in-out infinite;
-    }
+ 
     
     .brand-text {
       font-size: 20px;
@@ -154,60 +148,70 @@
     }
     
     /* Hero Section - CHANGE BACKGROUND IMAGE HERE */
-    .hero {
-      position: relative;
-      height: calc(100vh - 64px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      /* 
-        TO CHANGE BACKGROUND IMAGE:
-        Replace the URL below with your own image URL
-        Example: background-image: url('YOUR_IMAGE_URL_HERE');
-      */
-      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
-    
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(30, 41, 59, 0.8) 50%, rgba(0, 0, 0, 0.7) 100%);
-    }
-    
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      max-width: 900px;
-      padding: 0 16px;
-    }
+  /* Fullscreen Video */
+.hero-video {
+  position: fixed;   /* stays fixed in background */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover; /* keeps aspect ratio, covers screen */
+  z-index: -1;       /* behind everything */
+}
+
+/* Dark overlay content */
+.hero-overlay {
+  position: relative;
+  height: 100vh; /* full screen height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+}
+
+/* Title */
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #00e5ff; /* cyan glow */
+  margin-bottom: 0.5rem;
+  text-align: center;
+  text-shadow: 0 0 50px #11c1d4, 
+             0 0 20px #00e5ff, 
+             0 0 0px #12dff6;
+  animation: pulse-slow 3s infinite;
+}
+
+/* Subtitle */
+.hero-subtitle {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #ffffff; /* Pure white */
+  text-shadow: 0 0 0pcx #000, 
+             0 0 0px #000, 
+             0 0 0px #000;
+}
+
     
     .orb {
       width: 80px;
       height: 80px;
       margin: 0 auto 24px;
       border-radius: 50%;
-      background: hsl(var(--primary) / 0.2);
-      -webkit-backdrop-filter: blur(4px);
-              backdrop-filter: blur(4px);
-      display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--glow-primary);
-      animation: float 6s ease-in-out infinite;
     }
     
     .orb-inner {
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: hsl(var(--primary));
-      animation: pulse-slow 3s ease-in-out infinite;
     }
     
     .hero-title {
@@ -920,10 +924,36 @@
       .grid-2 {
         grid-template-columns: 1fr;
       }
+
+         /* Custom Card Styles */
+  .sar-card {
+  background: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+.sar-card:hover {
+  transform: translateY(-4px);
+}
+.sar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #00e0ff;
+  margin-bottom: 0.5rem;
+}
+.sar-text {
+  color: #d1d5db;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+      
     }
   </style>
 </head>
 <body>
+
+
   <!-- Navigation -->
   <nav class="nav">
     <div class="nav-inner">
@@ -941,16 +971,20 @@
     </div>
   </nav>
 
+<br><br><br>
   <!-- Home Section -->
   <section id="home" class="section active">
     <div class="hero">
       <div class="hero-content">
-        <div class="orb">
-          <div class="orb-inner"></div>
-        </div>
+        <div class="orb"></div>
+
+          <video autoplay muted loop playsinline class="hero-video">
+            <source src="218740.mp4" type="video/mp4">
+          </video>
         <h1 class="hero-title">Earth Risk Monitor</h1>
         <p class="hero-subtitle">Advanced Flood & Landslide Detection using NASA InSAR Technology and AI-Powered Alerts</p>
-        
+        <br>
+        <br>
         <div class="feature-grid">
           <a href="#flood" class="feature-card card" onclick="showSection('flood'); return false;">
             <div class="feature-icon">🌊</div>
@@ -978,9 +1012,176 @@
         </div>
       </div>
     </div>
-    
+
+  <br><br>
+  <!-- What is SAR -->
+<section class="p-8 bg-black grid md:grid-cols-2 gap-10 items-center">
+ 
+  <!-- Left: Text -->
+  <div>
+    <h2 class="text-2xl font-bold text-cyan-400 flex items-center mb-4">
+      💡 What is SAR?
+    </h2>
+    <p class="text-gray-300 mb-4">
+      Synthetic Aperture Radar (SAR) is an advanced remote sensing technology that
+      uses radar signals to create high-resolution images of the Earth's surface.
+    </p>
+    <p class="text-gray-300">
+      SAR can "see" through clouds, fog, and darkness, providing continuous monitoring
+      capabilities day and night.
+    </p>
+  </div>
+
+  <!-- Right: Image with glow border -->
+  <div class="flex flex-col items-center">
+    <div class="p-[2px] rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500">
+      <img src="images/sar-satellite.jpg" alt="SAR Satellite in orbit"
+           class="rounded-lg shadow-lg">
+    </div>
+    <p class="text-gray-400 text-sm mt-2">
+      SAR Satellite in orbit
+    </p>
+  </div>
+</section>
+
+
+
+  <!-- How does SAR Work -->
+<section class="p-b bg-black">
+  <h2 class="text-2xl font-bold text-cyan-400 flex items-center mb-8">
+    🛰 How Does SAR Work?
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-10 items-center">
+    <!-- Left: Image -->
+ <div class="flex flex-col items-center">
+  <!-- Gradient border wrapper -->
+  <div class="p-[3px] rounded-2xl bg-gradient-to-r from-cyan-400 to-green-500">
+    <img src="images/radar-waves.jpg" alt="SAR waves interacting with Earth"
+         class="rounded-2xl shadow-lg max-w-full">
+  </div>
+
+  <!-- Caption -->
+  <p class="text-gray-400 text-sm mt-2 text-center">
+    Synthetic Aperture Radar waves interacting with Earth
+  </p>
+</div>
+
+
+    <!-- Right: Cards -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Card 1 -->
+      <div class="sar-card">
+        <h3 class="sar-title">1. Signal Transmission</h3>
+        <p class="sar-text">
+          The satellite transmits pulses of microwave energy toward the Earth's surface.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="sar-card">
+        <h3 class="sar-title">2. Echo Reception</h3>
+        <p class="sar-text">
+          Different surfaces reflect signals differently – water, vegetation, and soil all have unique radar signatures.
+        </p>
+      </div>
+
+      <!-- Card 3 (spans 2 columns) -->
+      <div class="sar-card md:col-span-2">
+        <h3 class="sar-title">3. Image Processing</h3>
+        <p class="sar-text">
+          Advanced algorithms process the returned signals to create detailed images.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What Can SAR Detect -->
+<section class="p-8 bg-black">
+  <h2 class="text-2xl font-bold text-cyan-400 flex items-center mb-4">
+    ⚠ What Can SAR Detect?
+  </h2>
+  <p class="text-gray-300 mb-6">
+    SAR technology has become invaluable for monitoring our planet and detecting critical changes
+  </p>
+
+  <!-- Cards -->
+  <div class="grid md:grid-cols-4 gap-6 mb-8">
+    <!-- Card 1 -->
+    <div class="p-4 rounded-xl bg-gray-900 shadow-lg hover:shadow-cyan-400/50 transition">
+      <h3 class="font-bold text-blue-400 mb-2">🌊 Flood Monitoring</h3>
+      <p class="text-gray-300 text-sm">
+        Water appears very dark in SAR images, making it easy to map flooded areas.
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="p-4 rounded-xl bg-gray-900 shadow-lg hover:shadow-green-400/50 transition">
+      <h3 class="font-bold text-green-400 mb-2">⛰️ Landslide Detection</h3>
+      <p class="text-gray-300 text-sm">
+        SAR can detect ground deformation as small as a few millimeters.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="p-4 rounded-xl bg-gray-900 shadow-lg hover:shadow-yellow-400/50 transition">
+      <h3 class="font-bold text-lime-400 mb-2">🌳 Deforestation Tracking</h3>
+      <p class="text-gray-300 text-sm">
+        Changes in forest cover are easily visible, helping track environmental changes.
+      </p>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="p-4 rounded-xl bg-gray-900 shadow-lg hover:shadow-pink-400/50 transition">
+      <h3 class="font-bold text-cyan-400 mb-2">🏙️ Infrastructure Changes</h3>
+      <p class="text-gray-300 text-sm">
+        Urban development is clearly visible for planning and monitoring.
+      </p>
+    </div>
+  </div>
+
+  <!-- Image with gradient border -->
+  <div class="flex flex-col items-center">
+    <div class="p-[3px] rounded-lg bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
+      <img src="images/flood-detection.jpg" 
+           alt="Before and after flood event as detected by SAR"
+           class="rounded-lg shadow-lg max-w-full">
+    </div>
+    <p class="text-gray-400 text-sm mt-2 text-center">
+      Before and after flood event as detected by SAR
+    </p>
+  </div>
+</section>
+
+
+ <!-- Why is SAR Different -->
+<section class="grid md:grid-cols-2 gap-8 items-center p-8 bg-black">
+  <div>
+    <h2 class="text-2xl font-bold text-cyan-400 flex items-center mb-4">
+      👁 Why is SAR Different?
+    </h2>
+    <ul class="space-y-2 text-gray-300">
+      <li>✔ Works 24/7, regardless of weather or sunlight.</li>
+      <li>✔ Radar waves can penetrate vegetation canopy and even dry soil.</li>
+      <li>✔ Advanced SAR techniques can measure ground movement with millimeter accuracy.</li>
+    </ul>
+  </div>
+
+<div class="flex flex-col items-center">
+<div class="p-[3px] rounded-lg bg-gradient-to-r from-cyan-200 via-cyan-400 to-blue-700">
+    <img src="images/sar-vs-optical.jpg" 
+         alt="Optical vs SAR comparison"
+         class="rounded-lg shadow-lg max-w-full">
+  </div>
+  <p class="text-center text-gray-400 text-sm mt-2">
+    Optical (left) vs SAR (right)
+  </p>
+</div>
+</section>
+
     <!-- Info Section -->
-    <div class="container">
+    <div class="container p-8 bg-black">
       <div style="text-align: center; margin-bottom: 48px;">
         <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 16px;">Why Risk Monitoring Matters</h2>
         <p style="font-size: 18px; color: hsl(var(--muted-foreground)); max-width: 800px; margin: 0 auto;">
